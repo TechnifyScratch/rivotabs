@@ -22,6 +22,7 @@
       margin: 20px;
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
     }
     input {
       padding: 10px;
@@ -57,18 +58,21 @@
   <h1>Rivo Tabs</h1>
   <div id="controls">
     <input id="urlInput" type="text" placeholder="Paste a link...">
-    <button id="loadBtn">Run in Proxy</button>
+    <button id="loadBtn">Run in Proxy (Iframe)</button>
     <button id="fullscreenBtn">⛶ Fullscreen</button>
+    <button id="popupBtn">Open in New Window</button>
   </div>
   <iframe id="frame"></iframe>
 
   <script>
     const input = document.getElementById("urlInput");
-    const button = document.getElementById("loadBtn");
+    const loadBtn = document.getElementById("loadBtn");
     const iframe = document.getElementById("frame");
     const fsBtn = document.getElementById("fullscreenBtn");
+    const popupBtn = document.getElementById("popupBtn");
 
-    button.addEventListener("click", () => {
+    // Load in iframe
+    loadBtn.addEventListener("click", () => {
       const url = input.value.trim();
       if (!url) {
         alert("Paste a link first!");
@@ -77,18 +81,29 @@
       iframe.src = `/go?u=${encodeURIComponent(url)}`;
     });
 
+    // Run on Enter
     input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") button.click();
+      if (e.key === "Enter") loadBtn.click();
     });
 
+    // Fullscreen for iframe
     fsBtn.addEventListener("click", () => {
-      if (iframe.requestFullscreen) {
-        iframe.requestFullscreen();
-      } else if (iframe.webkitRequestFullscreen) {
-        iframe.webkitRequestFullscreen();
-      } else if (iframe.msRequestFullscreen) {
-        iframe.msRequestFullscreen();
+      if (iframe.requestFullscreen) iframe.requestFullscreen();
+      else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+      else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+    });
+
+    // Open in about:blank popup
+    popupBtn.addEventListener("click", () => {
+      const url = input.value.trim();
+      if (!url) {
+        alert("Paste a link first!");
+        return;
       }
+      const popup = window.open("about:blank", "_blank", "width=1000,height=700");
+      popup.document.write(`
+        <iframe src="/go?u=${encodeURIComponent(url)}" style="width:100%;height:100%;border:none;"></iframe>
+      `);
     });
   </script>
 </body>
