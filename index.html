@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rivo Tabs</title>
+  <style>
+    body {
+      background: #0f0f1a;
+      color: #eee;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff;
+    }
+    #controls {
+      margin: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    input {
+      padding: 10px;
+      width: 350px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ff00ff, #00ffff);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #ff00ff;
+    }
+    iframe {
+      width: 90%;
+      height: 500px;
+      border: 2px solid #0ff;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rivo Tabs</h1>
+  <div id="controls">
+    <input id="urlInput" type="text" placeholder="Paste a link...">
+    <button id="loadBtn">Run in Proxy</button>
+    <button id="fullscreenBtn">⛶ Fullscreen</button>
+  </div>
+  <iframe id="frame"></iframe>
+
+  <script>
+    const input = document.getElementById("urlInput");
+    const button = document.getElementById("loadBtn");
+    const iframe = document.getElementById("frame");
+    const fsBtn = document.getElementById("fullscreenBtn");
+
+    button.addEventListener("click", () => {
+      const url = input.value.trim();
+      if (!url) {
+        alert("Paste a link first!");
+        return;
+      }
+      iframe.src = `/go?u=${encodeURIComponent(url)}`;
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") button.click();
+    });
+
+    fsBtn.addEventListener("click", () => {
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.webkitRequestFullscreen) {
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) {
+        iframe.msRequestFullscreen();
+      }
+    });
+  </script>
+</body>
+</html>
